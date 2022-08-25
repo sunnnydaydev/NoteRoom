@@ -3,7 +3,7 @@
 plugins {
     id 'com.android.application' version '7.2.0' apply false
     id 'com.android.library' version '7.2.0' apply false
-    // kotlin 插件（1.5.10有bug 如下）
+    // kotlin 版本插件可能会引发编译错误如下：
     //java.lang.NoSuchMethodError: 'kotlin.sequences.Sequence com.google.devtools.ksp.processing.Resolver.getSymbolsWithAnnotation$default(com.google.devtools.ksp.processing.Resolver, java.lang.String, boolean, int, java.lang.Object)'
     //Module was compiled with an incompatible version of Kotlin. The binary version of its metadata is 1.7.1, expected version is 1.5.1.
     //Execution failed for task ':app:kspDebugKotlin'.

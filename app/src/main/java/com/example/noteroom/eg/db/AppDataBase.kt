@@ -15,7 +15,8 @@ abstract class AppDataBase : RoomDatabase() {
 
     abstract fun userDao(): UserDao // 提供User数据库的访问接口对象，如果有其他表也可以在这定义
 
-    companion object { // 注意数据库对象要进程内单例
+    // 注意数据库对象要进程内单例
+    companion object {
         private var instance: AppDataBase? = null
 
         fun getDataBase(context: Context): AppDataBase {
@@ -23,7 +24,7 @@ abstract class AppDataBase : RoomDatabase() {
                 return it
             }
 
-            return Room.databaseBuilder(context, AppDataBase::class.java,"app_database").build().apply { // apply 的用法
+            return Room.databaseBuilder(context, AppDataBase::class.java,"app_database").build().apply {
                 instance = this
             }
         }
