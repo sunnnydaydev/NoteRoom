@@ -17,15 +17,9 @@ interface UserDao {
     @Query("select * from User")
     fun queryAllUsers(): List<User>
 
-    /**
-     * 方法使用失败
-     * */
     @Delete
     fun deleteUser(user: User): Int
 
-    /**
-     * 方法使用失败
-     * */
     @Delete
     fun deleteUsers(userList: List<User>)
 
