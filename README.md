@@ -1,6 +1,6 @@
 # Room
 
-[1、快读入门篇](mds/1、快速入门篇.md)
+[1、快速入门篇](mds/1、快速入门篇.md)
 
 [2、CURD.md](mds/2、CURD.md)
 
