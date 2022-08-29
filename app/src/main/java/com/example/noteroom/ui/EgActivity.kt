@@ -74,8 +74,11 @@ class EgActivity : AppCompatActivity() {
 
         updateUser1.setOnClickListener {
             thread {
-                userDao.updateUser(user1.copy(name = "jerry", sex = "boy", age = 20))
-                Logger.d(TAG){"updateUser"}
+                val user = user1.copy(name = "jerry", sex = "boy", age = 20).apply {
+                    id = 1
+                }
+                userDao.updateUser(user)
+                Logger.d(TAG){"updateUser id:${user.id}"}
             }
         }
 

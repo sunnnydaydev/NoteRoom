@@ -8,7 +8,7 @@ import com.example.noteroom.eg.entity.User
  */
 @Dao
 interface UserDao {
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(user: User): Long
 
     @Update
