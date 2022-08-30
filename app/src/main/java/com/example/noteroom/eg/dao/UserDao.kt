@@ -2,6 +2,7 @@ package com.example.noteroom.eg.dao
 
 import androidx.room.*
 import com.example.noteroom.eg.entity.User
+import kotlinx.coroutines.flow.Flow
 
 /**
  * Create by SunnyDay /08/24 21:49:56
@@ -25,9 +26,6 @@ interface UserDao {
 
     /**
      * 根据指定的名字删除某一行信息。
-     * 存在疑问：
-     * 1、执行sql语句为啥要放在query注解中
-     * 2、@Delete注解标记方法为啥执行失败。
      * */
     @Query("delete from User where name = :targetName ")
     fun deleteUserByName(targetName: String): Int
@@ -40,4 +38,10 @@ interface UserDao {
     @Query("select * from User where age > :age ")
     fun queryUserOlderThan(age: Int): List<User>
 
+    // for test
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertUsers(vararg users: User)
+
+    @Query("SELECT * FROM user WHERE id = :id")
+    fun loadUserById(id: Int): Flow<User>
 }

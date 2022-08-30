@@ -158,8 +158,6 @@ Room 使用主键将传递的实体实例与数据库中的行进行匹配。如
 
 同理删除失败也是如上道理~
 
-
-
 （3）delete
 
 Room 使用主键将传递的实体实例与数据库中的行进行匹配。如果没有具有相同主键的行，Room 不会进行任何更改。
@@ -167,4 +165,51 @@ Room 使用主键将传递的实体实例与数据库中的行进行匹配。如
 @Delete 方法可以选择性地返回 int 值，该值指示成功删除的行数。
 
 （4）query
+
+- @Query是一个神奇的注解，该注解不仅可以执行查询sql语句，还可以执行插入、更新、删除等操作。如根据name删除数据可以这样做：
+
+```kotlin
+    /**
+     * 根据指定的名字删除某一行信息。
+     * */
+    @Query("delete from User where name = :targetName ")
+    fun deleteUserByName(targetName: String): Int
+```
+
+- 查询优化->返回表格列的子集
+
+例如，您的界面可能仅显示用户的名字和姓氏，而不是该用户的每一条详细信息。为节省资源并简化查询的执行，您应只查询所需的字段。
+
+通过Room我们可以把查询结果映射到定义的对象上：
+
+```kotlin
+data class UserName(
+    @ColumnInfo(name = "first_name") val firstName: String?,
+    @ColumnInfo(name = "last_name") val lastName: String?
+)
+```
+
+```kotlin
+@Query("SELECT first_name, last_name FROM user")
+fun loadFullName(): List<UserName>
+```
+
+这样就把查询部分字段的结果集映射到对象上了
+
+
+- sql语句传参
+
+直接来栗子吧~
+
+```kotlin
+    /**
+     * 注意：
+     * age为数据库中列字段名，也即User表中定义的字段
+     * :age代表取值，取方法内传递来的参数。
+     * */
+    @Query("select * from User where age > :age ")
+    fun queryUserOlderThan(age: Int): List<User>
+```
+
+
 
