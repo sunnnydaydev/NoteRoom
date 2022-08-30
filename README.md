@@ -4,7 +4,7 @@
 
 [2、CURD.md](mds/2、CURD.md)
 
-[mds/3、异步DAO.md](mds/3、异步DAO.md)
+[3、异步DAO.md](mds/3、异步DAO.md)
 
 [官方文档](https://developer.android.google.cn/training/data-storage/room#db-migration-testing)
 
