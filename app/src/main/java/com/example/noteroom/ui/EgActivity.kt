@@ -13,6 +13,7 @@ import com.example.noteroom.utils.Logger
 import kotlinx.android.synthetic.main.activity_eg.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.forEach
 import kotlinx.coroutines.launch
 import kotlin.concurrent.thread
@@ -31,12 +32,12 @@ class EgActivity : AppCompatActivity(), CoroutineScope by MainScope() {
         setContentView(R.layout.activity_eg)
 
         val userDao = AppDataBase.getDataBase(applicationContext).userDao()
-
         val user1 = User("Tom", "boy", 18)
         val user2 = User("Kate", "girl", 18)
 
         adduser1.setOnClickListener {
             launch {
+                Log.d("MyTag","currentThread:${Thread.currentThread().name}") // currentThread:main
                 userDao.insertUser(user1)
             }
         }
@@ -56,7 +57,7 @@ class EgActivity : AppCompatActivity(), CoroutineScope by MainScope() {
 
         updateUser1.setOnClickListener {
             launch {
-                userDao.updateUser(user1.copy("updateName","boy",20).apply {
+                userDao.updateUser(user1.copy(name = "updateName", sex = "boy", age = 20).apply {
                     id = 1
                 })
             }
@@ -76,6 +77,5 @@ class EgActivity : AppCompatActivity(), CoroutineScope by MainScope() {
                 }
             }
         }
-
     }
 }
