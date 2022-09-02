@@ -99,7 +99,7 @@ class EgActivity : AppCompatActivity(), CoroutineScope by MainScope() {
     }
 }
 ```
-获取我们刚了解协程时或有如下疑问：
+或许我们刚了解协程时或有如下疑问：
 
 MainScope()是安卓提供的一个方法，对协程进行了封装，其下文为Main线程的上下文，因此通过MainScope开启的线程都是跑在Main线程的，此时
 在主线程调用操作数据库的api这应该是不允许的吧，耗时操作呀~
@@ -156,3 +156,52 @@ public final class UserDao_Impl implements UserDao {
         }
 ```
 可见有dispatcher的影子，而且通过withContext切线程环境执行回调方法~ 
+
+
+我们还可以结合flow编写可观察查询，每当数据库有新的操作时（add、delete、update）可观察查询就会触发，进而进行一次查询：
+
+```kotlin
+@Dao
+interface UserDao {
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertUser(user: User)
+
+    @Update
+    suspend fun updateUser(user: User)
+
+    @Delete
+    suspend fun deleteUser(user: User)
+
+    @Query("select * from User")
+    suspend fun queryUser(): List<User>
+
+    /**
+     * 可观察查询
+     * 注意函数不是suspend类型
+     * */
+    @Query("select * from User")
+    fun queryALLUser():Flow<List<User>>
+}
+```
+
+```kotlin
+                userDao.queryALLUser()
+                    .collect { users ->
+                        val sb = StringBuilder()
+                        users.forEach {
+                            sb.append("\n")
+                                .append("PrimaryKey:${it.id} \n")
+                                .append("userName:${it.name} \n")
+                                .append("userSex:${it.sex} \n")
+                                .append("userAge:${it.age} \n")
+                        }
+                        Logger.d("MyTag") {
+                            sb.toString()
+                        }
+                    }
+```
+
+如上每次触发数据库操作时，便会触发一次查询操作。
+
+Room 中的可观察查询有一项重要限制：只要对表中的任何行进行更新（无论该行是否在结果集中），查询就会重新运行。通过应用相应库中的 distinctUntilChanged() 运算符可以确保仅在实际查询结果发生更改时通知界面。
